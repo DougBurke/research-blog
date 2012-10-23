@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></meta>
+        <title>Doug's research blog - Setting up</title>
+        <link rel="stylesheet" type="text/css" href="../css/default.css"></link>
+    </head>
+    <body>
+        <h1>Doug's research blog - Setting up</h1>
+        <div id="navigation">
+            <a href="../index.html">Home</a>
+	    <a href="../intro.html">Introduction</a>
+            <a href="../posts.html">All posts</a>
+	    <a href="../acknowledge.html">Acknowledgements</a>
+        </div>
+
+        <h1>Setting up</h1>
+
+<p>by <em>Douglas Burke</em> on <strong>23 October 2012</strong></p>
+
+<h2 id="setting-up">Setting up</h2>
+<p>The following analysis uses CIAO version 4.4 with the latest (at the time) calibration release, namely CALDB 4.5.3</p>
+<pre><code>% ciaover -v
+The current environment is configured for:
+  CIAO        : CIAO 4.4 Tuesday, June 5, 2012
+  Tools       : Package release 2  Tuesday, June 5, 2012
+  Sherpa      : Package release 2  Tuesday, June 5, 2012
+  Chips       : Package release 1  Friday, December 2, 2011
+  Prism       : Package release 1  Friday, December 2, 2011
+  Obsvis      : Package release 1  Friday, December 2, 2011
+  Core        : Package release 1  Friday, December 2, 2011
+  Graphics    : Package release 1  Friday, December 2, 2011
+  bindir      : /export/local/ciao-4.4/bin
+  Python path : CIAO
+
+CIAO Installation: osx64
+System information:
+Darwin luggnagg 10.8.0 Darwin Kernel Version 10.8.0: Tue Jun  7 16:33:36 PDT 2011; root:xnu-1504.15.3~1/RELEASE_I386 i386
+% check_ciao_caldb
+CALDB environment variable = /export/local/ciao-4.4/CALDB
+             CALDB version = 4.5.3
+             release date  = 2012-10-15T16:00:00 UTC
+CALDB query completed successfully.</code></pre>
+<p>I like to use a separate parameter file for each dataset, so I change the <code>PFILES</code> environment variable (using tcsh syntax):</p>
+<pre><code>% setenv PFILES &quot;`pwd`/param;$ASCDS_INSTALL/param:${ASCDS_CONTRIB}/param&quot;
+% echo $PFILES
+/Volumes/luggnaggraid/blog/group-data/param;/export/local/ciao-4.4/param:/export/local/ciao-4.4/contrib/param
+% paccess chandra_repro
+/Volumes/luggnaggraid/blog/group-data/param/chandra_repro.par</code></pre>
+<h3 id="data-download">Data download</h3>
+<p>We start by downloading the data for Observation 1655:</p>
+<pre><code>% cd /Volumes/luggnaggraid/blog/group-data
+% download_chandra_obsid 1655
+Downloading files for ObsId 1655, total size is 97 Mb.
+
+  Type     Format      Size  0........H.........1  Download Time Average Rate
+  ---------------------------------------------------------------------------
+  vv       pdf        34 Kb  ####################          &lt; 1 s  692.9 kb/s
+  oif      fits       23 Kb  ####################          &lt; 1 s  549.5 kb/s
+  cntr_img fits       66 Kb  ####################          &lt; 1 s  1099.8 kb/s
+  cntr_img jpg       492 Kb  ####################          &lt; 1 s  4117.1 kb/s
+  evt2     fits        3 Mb  ####################            2 s  1950.4 kb/s
+  full_img fits       56 Kb  ####################          &lt; 1 s  720.0 kb/s
+  full_img jpg        74 Kb  ####################          &lt; 1 s  1247.0 kb/s
+  bpix     fits       38 Kb  ####################          &lt; 1 s  530.2 kb/s
+  fov      fits        6 Kb  ####################          &lt; 1 s  162.1 kb/s
+  eph1     fits      281 Kb  ####################          &lt; 1 s  2809.7 kb/s
+  asol     fits        5 Mb  ####################            1 s  3765.3 kb/s
+  evt1     fits       42 Mb  ####################            8 s  5421.9 kb/s
+  flt      fits        7 Kb  ####################          &lt; 1 s  44.2 kb/s
+  msk      fits        5 Kb  ####################          &lt; 1 s  151.1 kb/s
+  mtl      fits      921 Kb  ####################          &lt; 1 s  1935.2 kb/s
+  stat     fits      634 Kb  ####################          &lt; 1 s  833.9 kb/s
+  bias     fits      428 Kb  ####################            1 s  405.8 kb/s
+  bias     fits      429 Kb  ####################          &lt; 1 s  467.1 kb/s
+  bias     fits      426 Kb  ####################          &lt; 1 s  2842.1 kb/s
+  bias     fits      420 Kb  ####################          &lt; 1 s  1942.1 kb/s
+  bias     fits      429 Kb  ####################            2 s  258.3 kb/s
+  pbk      fits        4 Kb  ####################          &lt; 1 s  87.5 kb/s
+  vv       pdf        40 Mb  ####################           11 s  3895.3 kb/s
+  eph1     fits       10 Kb  ####################          &lt; 1 s  30.6 kb/s
+  eph1     fits      273 Kb  ####################          &lt; 1 s  3064.0 kb/s
+  eph1     fits      249 Kb  ####################          &lt; 1 s  2691.4 kb/s
+  osol     fits      353 Kb  ####################          &lt; 1 s  1843.1 kb/s
+  aqual    fits      312 Kb  ####################          &lt; 1 s  497.8 kb/s
+  osol     fits      344 Kb  ####################          &lt; 1 s  2718.4 kb/s
+  osol     fits      329 Kb  ####################          &lt; 1 s  1464.7 kb/s
+  osol     fits      357 Kb  ####################          &lt; 1 s  640.8 kb/s
+
+      Total download size for ObsId 1655 = 97 Mb
+      Total download time for ObsId 1655 = 30 s</code></pre>
+<p>and then we <a href="http://cxc.harvard.edu/ciao/ahelp/chandra_repro.html">re-process it</a>, to ensure that the latest calibration data is used (this repeats some of the analysis used to create the <a href="../intro.html">“discovery image”</a>, but it doesn’t take too long to repeat.</p>
+<pre><code>% chandra_repro 1655 outdir=</code></pre>
+<p>We can create a broad-band (0.5 to 7.0 keV) exposure-corrected image of the observation with the <a href="http://cxc.harvard.edu/ciao/ahelp/fluximage.html">fluximage</a> script, noting that we restrict the analysis to just the ACIS-I array (this is done by the <code>[ccd_id=0:3]</code> expression) and chose a binning of 2 ACIS pixels (so the output image has a pixel size of <code>2 * 0.492</code>, or 0.984 arcseconds):</p>
+<pre><code>% fluximage &quot;1655/repro/acisf01655_repro_evt2.fits[ccd_id=0:3]&quot; qimg/ bin=2 
+Running fluximage
+Version: 06 October 2012
+
+Using CSC ACIS broad science energy band.
+Aspect solution 1655/repro/pcadf097142619N003_asol1.fits found.
+Bad pixel file 1655/repro/acisf01655_repro_bpix1.fits found.
+Mask file 1655/repro/acisf01655_000N003_msk1.fits found.
+PBK file 1655/repro/acisf097142234N003_pbk0.fits found.
+
+The output images will have 1472 by 1473 pixels, pixel size of 0.984 arcsec,
+    and cover x=2950.5:5894.5:2,y=2834.5:5780.5:2.
+
+Running tasks in parallel with 4 processors.
+Creating aspect histograms for obsid 1655
+Creating 4 instrument maps for obsid 1655
+Creating 4 exposure maps for obsid 1655
+Exposure map limits: 0.000000e+00, 5.512396e+06
+Writing exposure map to qimg/2_broad.expmap
+Exposure map limits: 0.000000e+00, 5.325326e+06
+Writing exposure map to qimg/0_broad.expmap
+Exposure map limits: 0.000000e+00, 5.378100e+06
+Writing exposure map to qimg/1_broad.expmap
+Exposure map limits: 0.000000e+00, 5.496100e+06
+Writing exposure map to qimg/3_broad.expmap
+Combining 4 exposure maps for obsid 1655
+Thresholding data for obsid 1655
+Exposure-correcting image for obsid 1655
+
+The following files were created:
+
+ The clipped counts image is:
+     qimg/broad_thresh.img
+
+ The clipped exposure map is:
+     qimg/broad_thresh.expmap
+
+ The exposure-corrected image is:
+     qimg/broad_flux.img</code></pre>
+<p>Which we view using <a href="http://cxc.harvard.edu/chips/">ChIPS</a>:</p>
+<pre><code>% chips
+-----------------------------------------
+Welcome to ChIPS: CXC's Plotting Package
+-----------------------------------------
+CIAO 4.4 ChIPS version 1 Tuesday, June 5, 2012
+
+chips-1&gt; from crates_contrib.all import *
+chips-2&gt; cr = read_file(&quot;qimg/broad_flux.img&quot;)
+chips-3&gt; smooth_image_crate(cr, &quot;gauss&quot;, 3)
+chips-4&gt; scale_image_crate(cr, &quot;log10&quot;)
+Warning: divide by zero encountered in log10
+chips-5&gt; add_window(8, 8, &quot;inches&quot;)
+chips-6&gt; add_image(cr)
+chips-7&gt; set_image(['threshold', [-8,-6.5]])
+chips-8&gt; set_image(['threshold', [-8.5,-6.5]])
+chips-9&gt; set_image(['depth', 50])
+chips-10&gt; set_xaxis(['tickformat', '%ra'])
+chips-11&gt; set_yaxis(['tickformat', '%dec'])
+chips-12&gt; set_axis(['*.size', 18])
+chips-13&gt; set_axis(['*.size', 16])
+chips-14&gt; set_plot_title('0.5-7.0 keV, ObsId 1655')
+chips-15&gt; set_frame(['bgcolor', 'black'])
+chips-16&gt; set_axis(['*.color', 'white'])
+chips-17&gt; set_plot(['title.color', 'white', 'title.size', 18])
+chips-18&gt; from chips_contrib.all import *
+chips-19&gt; add_fov_region('1655/repro/acisf01655_000N003_fov1.fits[ccd_id=0:3]')
+chips-20&gt; set_region('all', ['fill.style', 'empty'])
+chips ERROR: The fill style value (empty) must be one of [nofill, solidfill, updiagonal, downdiagonal, horizontal, vertical, crisscross, brick, grid, hexagon, polkadot, flower, userfill1, userfill2, userfill3]
+chips-21&gt; set_region('all', ['fill.style', 'nofill'])
+chips-22&gt; print_window('qimg.png')
+chips-23&gt; quit()</code></pre>
+<div class="figure">
+<img src="../images/qimg.png" alt="Quick look at the broad-band data; the green rectangles show the outline of each of the ACIS-I chips"></img><p class="caption">Quick look at the broad-band data; the green rectangles show the outline of each of the ACIS-I chips</p>
+</div>
+<p>As can be seen the putative group, which is at <span class="math">07<sup><em>h</em></sup>16<sup><em>m</em></sup>44. 3<sup><em>s</em></sup></span> and <span class="math">37<sup><em>o</em></sup></span> 39’ 55&quot;, is very close to the boundaries between two chips (in this case ACIS-I0 and ACIS-I1; the <a href="http://cxc.harvard.edu/cal/Acis/">ACIS Instrument Information page</a> has more information on the layout and details of the ACIS detector).</p>
+<p>It’s time to go home for the day; hopefully I’ll get time tomorrow to extract a spectrum of the point source and do some simple analysis on the extended emission.</p>
+
+
+    </body>
+</html>
