@@ -15,13 +15,14 @@
 	    <a href="../acknowledge.html">Acknowledgements</a>
         </div>
 
+	<div id="main">
         <h1>Sanity checks</h1>
 
 <p>by <em>Douglas Burke</em> on <strong>24 October 2012</strong></p>
 
 <p>Before extracting spectra, let’s do some sanity checks.</p>
 <h2 id="background-flares">Background flares</h2>
-<p>Chandra observations can be affected by “background flares”; that is periods of time when the particle background is not constant (for more information see the <a href="http://cxc.harvard.edu/cal/Acis/Cal_prods/bkgrnd/current/">ACIS Background Memos page</a> from the <a href="http://cxc.harvard.edu/cal/">Calibration team</a>). This flaring need not be a problem for analysis of bright pint sources, but as we are interested in faint, extended emission it is worth checking the high-energy light curve for signs of variability.</p>
+<p>Chandra observations can be affected by “background flares”; that is periods of time when the particle background is not constant (for more information see the <a href="http://cxc.harvard.edu/cal/Acis/Cal_prods/bkgrnd/current/">ACIS Background Memos page</a> from the <a href="http://cxc.harvard.edu/cal/">Calibration team</a>). This flaring need not be a problem for analysis of bright point sources, but as we are interested in faint, extended emission it is worth checking the high-energy light curve for signs of variability.</p>
 <p>Since ACIS has essentially no sensitivity above 9 keV, we chose to look at the 10 to 12 keV data, which is created by the particle background, for the ACIS-I0 and ACIS-I2 chips (these are the two that lie close to the group).</p>
 <pre><code>% punlearn dmextract
 % dmextract &quot;1655/repro/acisf01655_repro_evt2.fits[ccd_id=0,2,energy=10000:12000][bin time=::500]&quot; qbg.lc opt=ltc1
@@ -231,7 +232,8 @@ chips-13&gt; quit()</code></pre>
 <img src="../images/qprof.png" alt="The radial profile shows obvious emission out to \sim 30 pixels, which is \sim 15 arcsec, and possible emission out to \sim 100 pixels, although that could just be me reading too much into the data. A proper analysis would use the counts image, with the chip edges and other sources excluded from the profile. Note that the nearest two sources in the wavdetect output are \sim 175 and \sim 195 pixels away."></img><p class="caption">The radial profile shows obvious emission out to <span class="math"> ∼ 30</span> pixels, which is <span class="math"> ∼ 15</span> arcsec, and possible emission out to <span class="math"> ∼ 100</span> pixels, although that could just be me reading too much into the data. A proper analysis would use the counts image, with the chip edges and other sources excluded from the profile. Note that the nearest two sources in the <a href="#source-detection"><code>wavdetect</code> output</a> are <span class="math"> ∼ 175</span> and <span class="math"> ∼ 195</span> pixels away.</p>
 </div>
 
-
+	</div>
+	  
 	<div id="disqus_thread"></div>
 	<script type="text/javascript">
             var disqus_shortname = 'dougsresearchblog';
