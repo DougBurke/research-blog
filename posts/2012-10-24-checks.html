@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></meta>
+        <title>Doug's research blog - Sanity checks</title>
+        <link rel="stylesheet" type="text/css" href="../css/default.css"></link>
+    </head>
+    <body>
+        <h1>Doug's research blog - Sanity checks</h1>
+        <div id="navigation">
+            <a href="../index.html">Home</a>
+	    <a href="../intro.html">Introduction</a>
+            <a href="../posts.html">All posts</a>
+	    <a href="../acknowledge.html">Acknowledgements</a>
+        </div>
+
+        <h1>Sanity checks</h1>
+
+<p>by <em>Douglas Burke</em> on <strong>24 October 2012</strong></p>
+
+<p>Before extracting spectra, let’s do some sanity checks.</p>
+<h2 id="background-flares">Background flares</h2>
+<p>Chandra observations can be affected by “background flares”; that is periods of time when the particle background is not constant (for more information see the <a href="http://cxc.harvard.edu/cal/Acis/Cal_prods/bkgrnd/current/">ACIS Background Memos page</a> from the <a href="http://cxc.harvard.edu/cal/">Calibration team</a>). This flaring need not be a problem for analysis of bright pint sources, but as we are interested in faint, extended emission it is worth checking the high-energy light curve for signs of variability.</p>
+<p>Since ACIS has essentially no sensitivity above 9 keV, we chose to look at the 10 to 12 keV data, which is created by the particle background, for the ACIS-I0 and ACIS-I2 chips (these are the two that lie close to the group).</p>
+<pre><code>% punlearn dmextract
+% dmextract &quot;1655/repro/acisf01655_repro_evt2.fits[ccd_id=0,2,energy=10000:12000][bin time=::500]&quot; qbg.lc opt=ltc1
+% dmlist qbg.lc cols
+ 
+--------------------------------------------------------------------------------
+Columns for Table Block LIGHTCURVE
+--------------------------------------------------------------------------------
+ 
+ColNo  Name                 Unit        Type             Range
+   1   TIME_BIN             channel      Int4           1:45                 S/C TT corresponding to mid-exposure
+   2   TIME_MIN             s            Real8          97141592.4202499986: 97163977.9086109996 Minimum Value in Bin
+   3   TIME                 s            Real8          97141592.4202499986: 97163977.9086109996 S/C TT corresponding to mid-exposure
+   4   TIME_MAX             s            Real8          97141592.4202499986: 97163977.9086109996 Maximum Value in Bin
+   5   COUNTS               count        Int4           -                    Counts
+   6   STAT_ERR             count        Real8          0:+Inf               Statistical error
+   7   AREA                 pixel**2     Real8          -Inf:+Inf            Area of extraction
+   8   EXPOSURE             s            Real8          -Inf:+Inf            Time per interval
+   9   COUNT_RATE           count/s      Real8          0:+Inf               Rate
+  10   COUNT_RATE_ERR       count/s      Real8          0:+Inf               Rate Error
+ 
+--------------------------------------------------------------------------------
+World Coord Transforms for Columns in Table Block LIGHTCURVE
+--------------------------------------------------------------------------------
+ 
+ColNo    Name
+2:    DT_MIN               = +0 [s] +1.0 * (TIME_MIN  -97141842.420250)
+3:    DT                   = +0 [s] +1.0 * (TIME  -97141842.420250)
+4:    DT_MAX               = +0 [s] +1.0 * (TIME_MAX  -97141842.420250)</code></pre>
+<p>Plotting up the count rate gives us the following (since I use the “virtual” columns <code>DT_MIN</code> and <code>DT_MAX</code> to plot up the time since the start of the observation, I have to work around a bug in Crates in CIAO 4.4 which means the data needs to be re-shaped to exclude garbage values):</p>
+<pre><code>% chips
+-----------------------------------------
+Welcome to ChIPS: CXC's Plotting Package
+-----------------------------------------
+CIAO 4.4 ChIPS version 1 Tuesday, June 5, 2012
+
+chips-1&gt; cr = read_file(&quot;qbg.lc&quot;)
+chips-2&gt; xlo = cr.get_column(&quot;dt_min&quot;).values
+chips-3&gt; xhi = cr.get_column(&quot;dt_max&quot;).values
+chips-4&gt; xlo.shape
+         (45, 2)
+chips-5&gt; xlo = xlo.reshape(45*2)[:45]
+chips-6&gt; xhi = xhi.reshape(45*2)[:45]
+chips-7&gt; y = cr.get_column(&quot;count_rate&quot;).valueschips-8&gt; dy = cr.get_column(&quot;count_rate_err&quot;).values
+chips-9&gt; add_window(8, 5, &quot;inches&quot;)
+chips-10&gt; add_histogram(xlo, xhi, y, dy)
+chips-11&gt; set_plot_xlabel(r&quot;\Delta T (s)&quot;)
+chips-12&gt; set_plot_ylabel(&quot;Count rate (s^{-1])&quot;)
+chips-13&gt; set_plot_title(&quot;10 - 12 keV lightcurve for ACIS-I0,I2&quot;)
+chips-14&gt; set_axis(&quot;all&quot;, [&quot;label.size&quot;, 20, &quot;ticklabel.size&quot;, 16])
+chips-15&gt; set_plot([&quot;title.size&quot;, 20])
+chips-16&gt; set_plot_ylabel(&quot;Count rate (s^{-1})&quot;)
+chips-17&gt; print_qindow('qbg.png')
+NameError: name 'print_qindow' is not defined
+chips-18&gt; print_window('qbg.png')
+chips-19&gt; quit()</code></pre>
+<div class="figure">
+<img src="../images/qbg.png" alt="The light curve of the 10 to 12 keV particles in the ACIS-I0 and I2 chips looks consistent."></img><p class="caption">The light curve of the 10 to 12 keV particles in the ACIS-I0 and I2 chips looks consistent.</p>
+</div>
+
+
+    </body>
+</html>
