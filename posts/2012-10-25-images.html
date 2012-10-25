@@ -49,7 +49,7 @@ Group# Axis#
                    (DEC)   (+37.5473 )      (+0.000277778)                    (   (Y) (-124.50)) </code></pre>
 <p>Here we display the 2MASS <span class="math"><em>K</em><sub><em>s</em></sub></span> band image with ChIPS and then overlay the contours showing the Chandra emission. The contours were created by ds9,</p>
 <pre><code>% ds9 qimg/broad_flux.img -log -smooth -pan to 4960 3700 -zoom 2</code></pre>
-<p>using the following levels, and a smoothing scale of 3. The output was saved to <a href="../data/group.con">qimg/group.con</a> and then used in ChIPS below (I had aimed to use the <a href="http://cxc.harvard.edu/ciao/ahelp/add_ds9_contours.html"><code>add_ds9_contours</code></a> routine but this didn’t work, so I ended up using <a href="http://cxc.harvard.edu/ciao/ahelp/read_ds9_contours.html"><code>read_ds9_contours</code></a> to read in the data, then a quick spatial filter to find those contours near the group, and then display each of these as a curve (I should really have also added in a check on the Declination, not just the Right Ascension to save a little work by the computer):</p>
+<p>using the following levels, and a smoothing scale of 3. The output was saved to <a href="../data/group.con">qimg/group.con</a> and then used in ChIPS below. I had aimed to use the <a href="http://cxc.harvard.edu/ciao/ahelp/add_ds9_contours.html"><code>add_ds9_contours</code></a> routine but this didn’t work, so I ended up using <a href="http://cxc.harvard.edu/ciao/ahelp/read_ds9_contours.html"><code>read_ds9_contours</code></a> to read in the data, then a quick spatial filter to find those contours near the group, and then display each of these as a curve (I should really have also added in a check on the Declination, not just the Right Ascension to save a little work by the computer):</p>
 <pre><code>% cat qimg/group.lev 
 0
 3.75e-08
@@ -156,6 +156,8 @@ chips-11&gt; quit()</code></pre>
 <div class="figure">
 <img src="../images/nvss-overlay.png" alt="The image shown here covers a larger area than the 2MASS one above."></img><p class="caption">The image shown here covers a larger area than the 2MASS one above.</p>
 </div>
+<h2 id="what-does-this-tell-us">What does this tell us?</h2>
+<p>Well, the X-ray emission is extremely likely to be associated with the galaxy which we see in the optical and near-IR. This galaxy is nearby - it has a redshift of <code>z = 0.069</code>, or <code>20708 km/s</code>, which means that it is unassociated with the cluster target of the Chandra observation (which has a redshift of <code>z=0.55</code>). The X-ray emission appears faint, but extended, which is unlikely just to be the halo of the galaxy but instead the hot gas surrounding a group of galaxies (or at least that’s my hope). One way to test this is to extract the X-ray spectrum of this emission and see if it is well fit by a thermal plasma model and, if so, what is its temperature. If the system is relaxed - i.e. it has not been perturbed recently by a merger or some form of outflow from the galaxy, so that the gas traces out the gravitational potential - then the gas temperature is a good indicator of the total mass of the system. One possible fly in the ointment is that the radio emission indicates that there may be some non-thermal processes going on, which could contribute to the X-ray spectrum and so make it hard to measure any galaxy or group emission accurately.</p>
 
 	</div>
 	  
