@@ -154,8 +154,54 @@ chips-9&gt; zoom(2)
 chips-10&gt; print_window('nvss-overlay.png')
 chips-11&gt; quit()</code></pre>
 <div class="figure">
-<img src="../images/nvss-overlay.png" alt="The image shown here covers a larger area than the 2MASS one above."></img><p class="caption">The image shown here covers a larger area than the 2MASS one above.</p>
+<img src="../images/nvss-overlay.png" alt="The image shown here covers a larger area than the 2MASS one above. Fortunately there is also VLA FIRST data for this field, as shown below."></img><p class="caption">The image shown here covers a larger area than the 2MASS one above. Fortunately there is also VLA FIRST data for this field, as shown below.</p>
 </div>
+<p>If you go to the <a href="http://sundog.stsci.edu/">VLA FIRST archive page</a> you can use the <a href="http://first.astro.columbia.edu/cgi-bin/firstcutout">image cut-out service</a> to find the FIRST data for this area (the advantage over the NVSS data shown above is the significantly better spatial resolution). I retrieved a 10 arcminute image centered on the group, which was called <code>J071644+373956.fits</code> but I have renamed <code>first.fits</code>:</p>
+<pre><code>% chips
+-----------------------------------------
+Welcome to ChIPS: CXC's Plotting Package
+-----------------------------------------
+CIAO 4.4 ChIPS version 1 Tuesday, June 5, 2012
+
+chips-1&gt; add_window(8,8,'inches')
+chips-2&gt; make_figure('aK_asky_980413n0070197.fits', 'image')
+chips-3&gt; set_image(['depth', 50, 'threshold', [300,310]])
+chips-4&gt; set_image(['depth', 50, 'threshold', [300,320]])
+chips-5&gt; add_contour('nvss.fits')
+chips-6&gt; get_contour().levels
+         [0.0, 0.002, 0.004, 0.006, 0.008]
+chips-7&gt; set_contour(['levels', [0.002,0.004,0.006,0.008]])
+chips-8&gt; panto(109.17,37.66)
+chips-9&gt; zoom(2)
+chips-10&gt; add_contour('first.fits', ['color', 'cyan'])
+chips-11&gt; get_contour().levels
+          [0.0, 0.002, 0.004, 0.006]
+chips-12&gt; set_contour(['levels', [0.002,0.004,0.006,0.008]])
+chips-13&gt; from crates_contrib.utils import *
+chips-14&gt; (xs,ys) = read_ds9_contours('qimg/group.con')
+chips-15&gt; ci = ChipsCurve()
+chips-16&gt; ci.line.color = 'green'
+chips-17&gt; ci.symbol.style = 'none'
+chips-18&gt; for (x,y) in zip(xs,ys):
+              if (np.abs(x[0]-109.17)&gt;0.6) or (np.abs(y[0]-37.66)&gt;0.6):
+                  continue
+                  
+              add_curve(x, y, ci)
+              
+              
+chips-19&gt; from chips_contrib.regions import *
+chips-20&gt; add_fov_region('1655/repro/acisf01655_000N003_fov1.fits[ccd_id=0]')
+chips-21&gt; panto(109.17,37.66)
+chips-22&gt; zoom(2)
+chips-23&gt; zoom(2)
+chips-24&gt; zoom(0.75)
+chips-25&gt; set_region(['opacity', 0.2])
+chips-26&gt; print_window('radio-comparison.png')
+chips-27&gt; quit()</code></pre>
+<div class="figure">
+<img src="../images/radio-comparison.png" alt="The image is the 2MASS K_s band data with three contours: X-ray (green); Radio, NVSS (black); and Radio, FIRST (cyan). The light-green shaded region shows the coverage of the ACIS-I0 chip, showing that the second radio source, to the East of the group, is right on the edge of the chip, and so may well not be detected. There is a fainter K_s band source (than the group galaxy) at this location; it just may be somewhat obscured by the contours for the radio data."></img><p class="caption">The image is the 2MASS <span class="math"><em>K</em><sub><em>s</em></sub></span> band data with three contours: X-ray (green); Radio, NVSS (black); and Radio, FIRST (cyan). The light-green shaded region shows the coverage of the ACIS-I0 chip, showing that the second radio source, to the East of the group, is right on the edge of the chip, and so may well not be detected. There is a fainter <span class="math"><em>K</em><sub><em>s</em></sub></span> band source (than the group galaxy) at this location; it just may be somewhat obscured by the contours for the radio data.</p>
+</div>
+<p>The second radio source has a position - estimated by eye using the FIRST data - of <span class="math">7<sup><em>h</em></sup></span> <span class="math">16<sup><em>m</em></sup></span> <span class="math">32. 3<sup><em>s</em></sup></span> <span class="math"> + 37<sup><em>o</em></sup></span> 29’ 13&quot; - which <a href="http://ned.ipac.caltech.edu/cgi-bin/objsearch?objname=NVSS+J071632%2B373912+&amp;extend=no&amp;hconst=73&amp;omegam=0.27&amp;omegav=0.73&amp;corr_z=1&amp;out_csys=Equatorial&amp;out_equinox=J2000.0&amp;obj_sort=RA+or+Longitude&amp;of=pre_text&amp;zv_breaker=30000.0&amp;list_limit=5&amp;img_stamp=YES">NED identifies as <code>NVSS J071632+373912</code></a>, a source provisionally associated with the <a href="http://ned.ipac.caltech.edu/cgi-bin/objsearch?objname=2MASX%20J07163136%2B3739113&amp;extend=no">2MASS galaxy <code>2MASX J07163136+3739113</code></a>. Perhaps this galaxy has a similar redshift to <a href="http://ned.ipac.caltech.edu/cgi-bin/objsearch?objname=2MASX%20J07164427%2B3739556&amp;extend=no"><code>2MASX J07164427+3739556</code></a> (<span class="math"><em>z</em> = 0. 069</span>), and so is associated with it?</p>
 <h2 id="what-does-this-tell-us">What does this tell us?</h2>
 <p>Well, the X-ray emission is extremely likely to be associated with the galaxy which we see in the optical and near-IR. This galaxy is nearby - it has a redshift of <code>z = 0.069</code>, or <code>20708 km/s</code>, which means that it is unassociated with the cluster target of the Chandra observation (which has a redshift of <code>z=0.55</code>). The X-ray emission appears faint, but extended, which is unlikely just to be the halo of the galaxy but instead the hot gas surrounding a group of galaxies (or at least that’s my hope). One way to test this is to extract the X-ray spectrum of this emission and see if it is well fit by a thermal plasma model and, if so, what is its temperature. If the system is relaxed - i.e. it has not been perturbed recently by a merger or some form of outflow from the galaxy, so that the gas traces out the gravitational potential - then the gas temperature is a good indicator of the total mass of the system. One possible fly in the ointment is that the radio emission indicates that there may be some non-thermal processes going on, which could contribute to the X-ray spectrum and so make it hard to measure any galaxy or group emission accurately.</p>
 
