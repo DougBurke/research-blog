@@ -61,7 +61,7 @@ div#main > pre {
     -webkit-border-radius: 0.5em;
     margin: 0.5em;
     padding: 0.5em;
-    background: #cef; /* #9cf; */
+    background: #e5edf4;
     overflow: auto;
 }
 
