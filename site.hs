@@ -32,6 +32,11 @@ main = hakyll $ do
             >>> applyTemplateCompiler "templates/default.html"
             >>> relativizeUrlsCompiler
 
+    -- Render data files
+    match "data/*" $ do
+        route   idRoute
+        compile copyFileCompiler
+
     -- Create introduction and acknowledgements pages
     match "intro.md" $ do
        route   $ setExtension ".html"
