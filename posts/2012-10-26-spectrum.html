@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></meta>
+        <title>Doug's research blog - A spectrum?</title>
+        <link rel="stylesheet" type="text/css" href="../css/default.css"></link>
+    </head>
+    <body>
+        <h1>Doug's research blog - A spectrum?</h1>
+        <div id="navigation">
+            <a href="../index.html">Home</a>
+	    <a href="../intro.html">Introduction</a>
+            <a href="../posts.html">All posts</a>
+	    <a href="../acknowledge.html">Acknowledgements</a>
+        </div>
+
+	<div id="main">
+        <div id="publisheddate">
+<p>by <em>Douglas Burke</em> on <strong>26 October 2012</strong></p>
+</div>
+
+<p>So far I’ve spent too long trying to get previous/next links to appear in this blog, so let’s try and improve things and do some science.</p>
+<p>First: where is the center of the group in chip coordinates again? I use the <a href="http://cxc.harvard.edu/ciao/ahelp/dmcoords.html"><code>dmcoords</code></a> tool to convert from the celestial coordinates of the source to SKY and CHIP coordinates (I use the non-interactive version just to be fancy). Now, because of the <a href="http://cxc.harvard.edu/ciao/dictionary/dither.html">dither pattern</a> made by Chandra during the observation there is no one position on the detector that matches the sky coordinate, but the values below are a good indicator.</p>
+<pre><code>% punlearn dmcoords
+% dmcoords qimg/broad_thresh.img 1655/repro/pcadf097142619N003_asol1.fits \
+           ra='7 16 44.3' dec='37 39 56' option=cel
+% pget dmcoords x
+4962.518225022578
+% pget dmcoords y
+3700.074715299584
+% pget dmcoords chip_id
+0
+% pget dmcoords chipx
+994.0953131998009
+% pget dmcoords chipy
+220.554982740513</code></pre>
+<p>Looking at the chip coordinates for ACIS-I0, we get</p>
+<pre><code>% ds9 ccd02.fits -bin filter 'ccd_id=0' -bin cols chipx chipy \
+      -bin about 512 512 -zoom 0.5 -smooth -smooth radius 4 \
+      -cmap b -saveimage png chip0.png</code></pre>
+<div class="figure">
+<img src="../images/chip0.png" alt="The 0.5 to 7.0 keV data for ACIS-I0 displayed in chip coordinates; the group is at (994,221), with (1,1) being the bottom-left pixel and (1024,1024) the top-right pixel, which makes it the emission in the bottom-right of the image."></img><p class="caption">The 0.5 to 7.0 keV data for ACIS-I0 displayed in chip coordinates; the group is at <code>(994,221)</code>, with <code>(1,1)</code> being the bottom-left pixel and <code>(1024,1024)</code> the top-right pixel, which makes it the emission in the bottom-right of the image.</p>
+</div>
+<h2 id="spectral-extraction">Spectral extraction</h2>
+<p>I created source and background regions by eye, to give:</p>
+<pre><code>% cat qspec/src.reg
+circle(4962.7,3700.8,20)
+% cat qspec/bg.reg 
+circle(5146.5,4166.5,280)-ellipse(5142.9,4005.8,50,30,175)-ellipse(5025.3,4346.8,40,17,5)</code></pre>
+<p>These regions are based on the <a href="../posts/2012-10-24-checks.html#source-detection">source detection results from Wednesday</a>, where I have changed the source shape (from elliptical to circular and reduced the aperture size slightly) and the background region is a reasonable fraction of the ACIS-I0 chip without having to exclude too many sources. I took care to make sure that all the regions are on the same chip, but I did not bother to ensure that the background region fell on the <a href="http://cxc.harvard.edu/proposer/POG/html/chap6.html">same node</a> as the source region (which I could have done, I just forgot, because I wanted to make sure I picked a large region for estimating the background).</p>
+<pre><code>% ds9 ccd02.fits -log -cmap b -region qimg/src.reg \
+      -bin about 5060 4080 -bin factor 4 -zoom 2
+... then qspec/src.reg and qspec/bg.reg are loaded from within ds9 and
+... set to being drawn in white</code></pre>
+<div class="figure">
+<img src="../images/source-regions.png" alt="The green regions show the output from wavdetect, the solid white is the region I have selected for the initial source extraction (qspec/src.reg) and the dotted white is the background region (qspec/bg.reg), which excludes two sources using regions slightly-larger than the wavdetect output."></img><p class="caption">The green regions show the output from <code>wavdetect</code>, the solid white is the region I have selected for the initial source extraction (<code>qspec/src.reg</code>) and the dotted white is the background region (<code>qspec/bg.reg</code>), which excludes two sources using regions slightly-larger than the <code>wavdetect</code> output.</p>
+</div>
+<p>A quick look at the source counts in these regions, using <a href="http://cxc.harvard.edu/ciao/ahelp/dmstat.html"><code>dmstat</code></a>, gives</p>
+<pre><code>% dmstat qimg/broad_thresh.img&quot;[sky=region(qspec/src.reg)]&quot; cen-
+EVENTS_IMAGE
+    min:	0 	      @:	( 4957.5 3681.5 )
+    max:	2 	      @:	( 4959.5 3699.5 )
+   mean:	0.20125786164 
+  sigma:	0.43840583441 
+    sum:	64 
+   good:	318 
+   null:	123 
+% dmstat qimg/broad_thresh.img&quot;[sky=region(qspec/bg.reg)]&quot; cen-
+EVENTS_IMAGE
+    min:	0 	      @:	( 5123.5 3887.5 )
+    max:	2 	      @:	( 5049.5 3909.5 )
+   mean:	0.014901436686 
+  sigma:	0.1222565917 
+    sum:	892 
+   good:	59860 
+   null:	18540 </code></pre>
+<p>so the background level within the source is small (this is for the 0.5 to 7.0 keV band):</p>
+<pre><code>% chips -n
+chips-1&gt; 892 * 318 / 59860.0
+         4.738656866020715
+chips-2&gt; quit()</code></pre>
+<p>So, there’s about 59 source counts and 5 background counts in the source region.</p>
+<p>Since there are a lot of parameters to the <a href="http://cxc.harvard.edu/ciao/ahelp/specextract.html"><code>specextract</code></a> script, I am going to set the separately using <a href="http://cxc.harvard.edu/ciao/ahelp/pset.html"><code>pset</code></a>, rather than give them all on the command line when calling <code>specextract</code>. I chose to use the “extended source” analysis version - that is set <code>weight=yes</code> and <code>correct=no</code> - since I am using a relatively large aperture of <code>r=20</code> pixels (although the PSF is significantly larger at this off-axis angle than at the aimpoint, <a href="../posts/2012-10-24-checks.html#source-detection">as discussed on Wednesday</a>, it seems better to use the extended-source approach here):</p>
+<pre><code>% punlearn specextract
+% pset specextract infile=1655/repro/acisf01655_repro_evt2.fits&quot;[sky=region(qspec/src.reg)]&quot;
+% pset specextract bkgfile=1655/repro/acisf01655_repro_evt2.fits&quot;[sky=region(qspec/bg.reg)]&quot;
+% pset specextract asp=1655/repro/pcadf097142619N003_asol1.fits
+% pset specextract pbkfile=1655/repro/acisf097142234N003_pbk0.fits 
+% pset specextract mskfile=1655/repro/acisf01655_000N003_msk1.fits
+% pset specextract badpixfile=1655/repro/acisf01655_000N003_bpix1.fits
+% specextract outroot=qspec/group grouptype=NONE
+Source event file(s) (1655/repro/acisf01655_repro_evt2.fits[sky=region(qspec/src.reg)]): 
+Should response files be weighted? (yes): 
+Apply point source aperture correction to ARF? (no): 
+Combine ungrouped output spectra and responses? (no): 
+Background event file(s) (1655/repro/acisf01655_repro_evt2.fits[sky=region(qspec/bg.reg)]): 
+Create background ARF and RMF? (yes): 
+Source aspect solution or histogram file(s) (1655/repro/pcadf097142619N003_asol1.fits): 
+pbkfile input to mkwarf (1655/repro/acisf097142234N003_pbk0.fits): 
+mskfile input to mkwarf (1655/repro/acisf01655_000N003_msk1.fits): 
+  
+Running: specextract
+  Version:    14 February 2012
+
+Setting bad pixel file for item 1 of 1 in input list
+
+
+Extracting src spectra for item 1 of 1 in input list
+
+
+Creating src ARF for item 1 of 1 in input list
+
+
+Creating src RMF for item 1 of 1 in input list
+
+
+Using mkacisrmf...
+
+Updating header of qspec/group.pi with RESPFILE and ANCRFILE keywords.
+
+Setting bad pixel file for item 1 of 1 in input list
+
+
+Extracting bkg spectra for item 1 of 1 in input list
+
+
+Creating bkg ARF for item 1 of 1 in input list
+
+
+Creating bkg RMF for item 1 of 1 in input list
+
+
+Using mkacisrmf...
+
+Updating header of qspec/group_bkg.pi with RESPFILE and ANCRFILE keywords.
+Updating header of qspec/group.pi with BACKFILE keyword.</code></pre>
+<p>Unfortunately this took a while since the calculation of the weighted response for the background region is time consuming, as it is a relatively large area.</p>
+<p>We can now load this data up into <a href="http://cxc.harvard.edu/sherpa/">Sherpa</a> and see what it looks like:</p>
+<pre><code>% cd qspec
+% ls -1
+bg.reg
+group.pi
+group.warf
+group.wfef
+group.wrmf
+group_asphist0.fits
+group_bkg.pi
+group_bkg.warf
+group_bkg.wfef
+group_bkg.wrmf
+group_bkg_asphist0.fits
+group_bkg_tdet.fits
+group_tdet.fits
+src.reg
+% sherpa
+-----------------------------------------------------
+Welcome to Sherpa: CXC's Modeling and Fitting Package
+-----------------------------------------------------
+CIAO 4.4 Sherpa version 2 Tuesday, June 5, 2012
+
+sherpa-1&gt; load_pha('group.pi')
+read ARF file group.warf
+read RMF file group.wrmf
+read ARF (background) file group_bkg.warf
+read RMF (background) file group_bkg.wrmf
+read background file group_bkg.pi
+sherpa-2&gt; group_counts(20)
+sherpa-3&gt; subtract()
+sherpa-4&gt; plot_data()
+sherpa-5&gt; print_window('qspec-initial.png')</code></pre>
+<div class="figure">
+<img src="../images/qspec-initial.png" alt="The first look at the source spectrum is not inspiring as there just aren’t that many counts there (which we expected anyway since \sim 60 counts binned into groups of 20 is only going to produce \sim 3 bins)."></img><p class="caption">The first look at the source spectrum is not inspiring as there just aren’t that many counts there (which we expected anyway since <span class="math"> ∼ 60</span> counts binned into groups of 20 is only going to produce <span class="math"> ∼ 3</span> bins).</p>
+</div>
+
+	</div>
+	  
+	<div id="disqus_thread"></div>
+	<script type="text/javascript">
+            var disqus_shortname = 'dougsresearchblog';
+            (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+	<div class="jumptostart">
+	  <a href="#">Jump to top</a>
+	</div>
+	
+	<div class="license">
+	  All content © Douglas Burke 2012.<br>
+	  <a rel="license" href="http://creativecommons.org/licenses/by/3.0/deed.en_US"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png"></img></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/deed.en_US">Creative
+	  Commons Attribution 3.0 Unported License</a>.
+	</div>
+
+    </body>
+</html>
