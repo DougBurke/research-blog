@@ -20,6 +20,10 @@
 <p>by <em>Douglas Burke</em> on <strong>26 October 2012</strong></p>
 </div>
 
+<div class="neighbours">
+  <div class="previouspost"><a href="../posts/2012-10-25-images.html">Images</a></div>
+</div>
+
 <p>So far I’ve spent too long trying to get previous/next links to appear in this blog, so let’s try and improve things and do some science.</p>
 <p>First: where is the center of the group in chip coordinates again? I use the <a href="http://cxc.harvard.edu/ciao/ahelp/dmcoords.html"><code>dmcoords</code></a> tool to convert from the celestial coordinates of the source to SKY and CHIP coordinates (I use the non-interactive version just to be fancy). Now, because of the <a href="http://cxc.harvard.edu/ciao/dictionary/dither.html">dither pattern</a> made by Chandra during the observation there is no one position on the detector that matches the sky coordinate, but the values below are a good indicator.</p>
 <pre><code>% punlearn dmcoords
@@ -293,6 +297,7 @@ sherpa-24&gt; quit()</code></pre>
 <div class="figure">
 <img src="../images/plasma-temp.png" alt="At low energies (below the energy of the plasma), the emission is well approximated by a power law, whereas above this value the emission starts to drop strongly. The temperature of a plasma, when given in energy units, is a measure of this break position. The narrow lines in these plasmas (and not-so-narrow bump just below 1 keV for the 1 keV system) are due to emission from metallic ions in the plasma, which makes temperature and metallicity somewhat hard to disentangle for temperatures around 1 keV. Unfortunately the intrinsic energy resolution of the ACIS detectors is not good enough to resolve these features individually (for that you need to use gratings or an X-ray micro-calorimeter such as flown on Suzaku)."></img><p class="caption">At low energies (below the energy of the plasma), the emission is well approximated by a power law, whereas above this value the emission starts to drop strongly. The temperature of a plasma, when given in energy units, is a measure of this break position. The narrow lines in these plasmas (and not-so-narrow bump just below 1 keV for the 1 keV system) are due to emission from metallic ions in the plasma, which makes temperature and metallicity somewhat hard to disentangle for temperatures around 1 keV. Unfortunately the intrinsic energy resolution of the ACIS detectors is not good enough to resolve these features individually (for that you need to use gratings or an X-ray micro-calorimeter such as flown on <a href="http://heasarc.gsfc.nasa.gov/docs/astroe/astroe2.html">Suzaku</a>).</p>
 </div>
+
 
 	</div>
 	  
