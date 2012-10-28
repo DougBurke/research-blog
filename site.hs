@@ -9,52 +9,66 @@ import Data.Monoid (mempty, mconcat)
 
 import Hakyll
 
+type SPage = Page String 
+
 main :: IO ()
 main = hakyll $ do
+
+    -- To avoid a dependency cycle we need to process the blog posts
+    -- twice.
+    --
+    posts <- group "posts" $ match "posts/*.md" $ do
+                  route   $ setExtension ".html"
+                  compile pageCompiler
+
     -- Compress CSS
-    match "css/*" $ do
-        route   idRoute
-        compile compressCssCompiler
+    _ <- match "css/*" $ do
+           route   idRoute
+           compile compressCssCompiler
 
     -- Copy images
-    match "images/*" $ do
-        route   idRoute
-        compile copyFileCompiler
+    _ <- match "images/*" $ do
+           route   idRoute
+           compile copyFileCompiler
 
     -- Read templates
-    match "templates/*" $ compile templateCompiler
+    _ <- match "templates/*" $ compile templateCompiler
 
     -- Render posts
-    match "posts/*" $ do
-        route   $ setExtension ".html"
-        compile $ pageCompiler
-            >>> applyTemplateCompiler "templates/post.html"
-            >>> applyTemplateCompiler "templates/default.html"
-            >>> relativizeUrlsCompiler
+    _ <- match "posts/*.md" $ do
+           route   $ setExtension ".html"
+           compile $ pageCompiler
+               >>> requireAllA posts addNearbyPosts
+               >>> applyTemplateCompiler "templates/neighbours.html"
+               >>> applyTemplateCompiler "templates/post.html"
+               >>> applyTemplateCompiler "templates/default.html"
+	       -- QUS: why does this not 'fix' the URLs for the next/prev
+               --      links?
+               >>> relativizeUrlsCompiler
 
     -- Render data files
-    match "data/*" $ do
-        route   idRoute
-        compile copyFileCompiler
+    _ <- match "data/*" $ do
+           route   idRoute
+           compile copyFileCompiler
 
     -- Create introduction and acknowledgements pages
-    match "intro.md" $ do
-       route   $ setExtension ".html"
-       compile $ pageCompiler
-            >>> applyTemplateCompiler "templates/default.html"
-            >>> relativizeUrlsCompiler
+    _ <- match "intro.md" $ do
+          route   $ setExtension ".html"
+          compile $ pageCompiler
+               >>> applyTemplateCompiler "templates/default.html"
+               >>> relativizeUrlsCompiler
 
-    match "acknowledge.md" $ do
-       route   $ setExtension ".html"
-       compile $ pageCompiler
-            >>> applyTemplateCompiler "templates/default.html"
-            >>> relativizeUrlsCompiler
+    _ <- match "acknowledge.md" $ do
+          route   $ setExtension ".html"
+          compile $ pageCompiler
+               >>> applyTemplateCompiler "templates/default.html"
+               >>> relativizeUrlsCompiler
 
     -- Render posts list
     match "posts.html" $ route idRoute
     create "posts.html" $ constA mempty
         >>> arr (setField "title" "All posts")
-        >>> requireAllA "posts/*" addPostList
+        >>> requireAllA posts addPostList
         >>> applyTemplateCompiler "templates/posts.html"
         >>> applyTemplateCompiler "templates/default.html"
         >>> relativizeUrlsCompiler
@@ -63,17 +77,57 @@ main = hakyll $ do
     match "index.html" $ route idRoute
     create "index.html" $ constA mempty
         >>> arr (setField "title" "Home")
-        >>> requireAllA "posts/*" (id *** arr (take 3 . reverse . chronological) >>> addPostList)
+        >>> requireAllA posts (id *** arr (take 3 . recentFirst) >>> addPostList)
         >>> applyTemplateCompiler "templates/index.html"
         >>> applyTemplateCompiler "templates/default.html"
         >>> relativizeUrlsCompiler
 
+renderTemplate :: Identifier Template -> Compiler [SPage] [SPage]
+renderTemplate t = require t (\p tt -> map (applyTemplate tt) p)
+
 -- | Auxiliary compiler: generate a post list from a list of given posts, and
 -- add it to the current page under @$posts@
 --
-addPostList :: Compiler (Page String, [Page String]) (Page String)
+addPostList :: Compiler (SPage, [SPage]) SPage
 addPostList = setFieldA "posts" $
-    arr (reverse . chronological)
-        >>> require "templates/postitem.html" (\p t -> map (applyTemplate t) p)
+    arr recentFirst
+        >>> renderTemplate "templates/postitem.html"
         >>> arr mconcat
         >>> arr pageBody
+
+get0 :: [a] -> [a]
+get0 (a:_) = [a]
+get0 _     = []
+
+get1 :: [a] -> [a]
+get1 (_:a:_) = [a]
+get1 _       = []
+
+-- | Given a post and a list of all posts, return the
+--   preceeding and following posts, if they exist.
+--
+findNeighbours :: Compiler (SPage, [SPage]) (SPage, ([SPage], [SPage]))
+findNeighbours = 
+    arr $ \(cpage, plist) ->
+        let slist = chronological plist
+            (earlier, later) = break (==cpage) slist
+        in (cpage, (get0 (reverse earlier), get1 later))
+
+-- should be read from a file rather than hard coded
+prevTemplate, nextTemplate :: String
+prevTemplate = "<div class=\"previouspost\"><a href=\"$url$\">$title$</a></div>"
+nextTemplate = "<div class=\"followingpost\"><a href=\"$url$\">$title$</a></div>"
+
+-- | Add in the previous and next links for a post
+--
+addNearbyPosts :: Compiler (SPage, [SPage]) SPage
+addNearbyPosts = 
+    arr (id *** recentFirst)
+    >>> findNeighbours
+    >>> setFieldA "neighbours"
+        (arr (\(as,bs) -> 
+          map (applyTemplate (readTemplate prevTemplate)) as 
+          ++
+          map (applyTemplate (readTemplate nextTemplate)) bs)
+         >>> arr mconcat >>> arr pageBody)
+
