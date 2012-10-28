@@ -37,6 +37,10 @@ div.nextpost {
     float: right;
 }
 
+div.neighbours + div , div.neighbours + p {
+    clear: both;
+}
+
 span.label {
     font-size: 80%;
 }
