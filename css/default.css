@@ -29,6 +29,18 @@ div#navigation a {
     -moz-border-radius-topright: 5px;
 }
 
+div.previouspost {
+    float: left;
+}
+
+div.nextpost {
+    float: right;
+}
+
+span.label {
+    font-size: 80%;
+}
+
 div#main {
     background: white;
 }

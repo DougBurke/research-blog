@@ -115,8 +115,8 @@ findNeighbours =
 
 -- should be read from a file rather than hard coded
 prevTemplate, nextTemplate :: String
-prevTemplate = "<div class=\"previouspost\"><a href=\"$url$\">$title$</a></div>"
-nextTemplate = "<div class=\"followingpost\"><a href=\"$url$\">$title$</a></div>"
+prevTemplate = "<div class='previouspost'><a href='$url$'>$title$</a><br/><span class='label'>previous post</span></div>"
+nextTemplate = "<div class='followingpost'><a href='$url$'>$title$</a><br/><span class='label'>next post</span></div>"
 
 -- | Add in the previous and next links for a post
 --
