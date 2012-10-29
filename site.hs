@@ -64,14 +64,13 @@ main = hakyll $ do
                >>> applyTemplateCompiler "templates/default.html"
                >>> relativizeUrlsCompiler
 
-    -- Render posts list
+    -- Render posts list (because I did not think about this we
+    -- have two pages with all the posts; could use a re-direct?)
+    --
     match "posts.html" $ route idRoute
-    create "posts.html" $ constA mempty
-        >>> arr (setField "title" "All posts")
-        >>> requireAllA posts addPostList
-        >>> applyTemplateCompiler "templates/posts.html"
-        >>> applyTemplateCompiler "templates/default.html"
-        >>> relativizeUrlsCompiler
+    match "posts/index.html" $ route idRoute
+    _ <- create "posts.html" $ allPosts posts
+    _ <- create "posts/index.html" $ allPosts posts
 
     -- Create index
     match "index.html" $ route idRoute
@@ -130,4 +129,14 @@ addNearbyPosts =
           ++
           map (applyTemplate (readTemplate nextTemplate)) bs)
          >>> arr mconcat >>> arr pageBody)
+
+-- | Construct a page listing all the posts.
+--
+allPosts :: Pattern SPage -> Compiler () SPage
+allPosts posts = constA mempty
+        >>> arr (setField "title" "All posts")
+        >>> requireAllA posts addPostList
+        >>> applyTemplateCompiler "templates/posts.html"
+        >>> applyTemplateCompiler "templates/default.html"
+        >>> relativizeUrlsCompiler
 
