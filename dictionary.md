@@ -101,3 +101,9 @@ More information:
  * [ACIS-I PSF size versus off-axis angle](http://cxc.harvard.edu/proposer/POG/html/chap4.html#fg:hrma_ee_offaxis_acisi) (note that this link takes you to the
    figure caption, you have to scroll up the page to get to the plots).
 
+## Therm
+
+A [unit of energy](http://en.wikipedia.org/wiki/Therm).
+Also, a mis-spelling of the word *term*.
+
+
