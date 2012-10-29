@@ -29,15 +29,11 @@ div#navigation a {
     -moz-border-radius-topright: 5px;
 }
 
-div.neighbours {
-    width: inherit;
-}
-
 div.previouspost {
     float: left;
 }
 
-div.nextpost {
+div.followingpost {
     float: right;
 }
 
