@@ -37,7 +37,8 @@ div.followingpost {
     float: right;
 }
 
-div.neighbours + div , div.neighbours + p {
+/* ugly design */
+div.neighbours + div , div.neighbours + p , div.neighbours + h2 {
     clear: both;
 }
 
