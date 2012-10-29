@@ -31,10 +31,13 @@ div#navigation a {
 
 div.previouspost {
     float: left;
+    padding: 0.5em 0;
 }
 
 div.followingpost {
     float: right;
+    text-align: right;
+    padding: 0.5em 0;
 }
 
 /* ugly design */
