@@ -4,7 +4,8 @@ author: Douglas Burke
 date: October 29 2012
 ---
 
-This is a somewhat ad-hoc dictionary of therms used in this research blog.
+This is a somewhat ad-hoc dictionary of 
+[therms](#therm) used in this research blog.
 
 ## ACIS
 
@@ -104,6 +105,5 @@ More information:
 ## Therm
 
 A [unit of energy](http://en.wikipedia.org/wiki/Therm).
-Also, a mis-spelling of the word *term*.
-
+Also, more apropos to this document, a misspelling of the word *term*.
 
