@@ -113,11 +113,6 @@ findNeighbours =
             (earlier, later) = break (==cpage) slist
         in (cpage, (get0 (reverse earlier), get1 later))
 
--- should be read from a file rather than hard coded
-prevTemplate, nextTemplate :: String
-prevTemplate = "<div class='previouspost'><a href='$url$'>$title$</a><br/><span class='label'>previous post</span></div>"
-nextTemplate = "<div class='followingpost'><a href='$url$'>$title$</a><br/><span class='label'>next post</span></div>"
-
 -- | Add in the previous and next links for a post
 --
 addNearbyPosts :: Compiler (SPage, [SPage]) SPage
@@ -125,11 +120,10 @@ addNearbyPosts =
     arr (id *** recentFirst)
     >>> findNeighbours
     >>> setFieldA "neighbours"
-        (arr (\(as,bs) -> 
-          map (applyTemplate (readTemplate prevTemplate)) as 
-          ++
-          map (applyTemplate (readTemplate nextTemplate)) bs)
-         >>> arr mconcat >>> arr pageBody)
+      ((mapCompiler (applyTemplateCompiler "templates/post-previous.html") 
+        ***
+        mapCompiler (applyTemplateCompiler "templates/post-next.html"))
+       >>> arr (uncurry (++)) >>> arr mconcat >>> arr pageBody)
 
 -- | Construct a page listing all the posts.
 --
