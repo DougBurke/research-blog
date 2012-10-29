@@ -39,8 +39,9 @@ main = hakyll $ do
            route   $ setExtension ".html"
            compile $ pageCompiler
                >>> requireAllA posts addNearbyPosts
-               >>> applyTemplateCompiler "templates/neighbours.html"
+               >>> applyTemplateCompiler "templates/neighbours-start.html"
                >>> applyTemplateCompiler "templates/post.html"
+               >>> applyTemplateCompiler "templates/neighbours-end.html"
                >>> applyTemplateCompiler "templates/default.html"
 	       -- QUS: why does this not 'fix' the URLs for the next/prev
                --      links?
