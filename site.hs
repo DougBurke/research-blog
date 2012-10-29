@@ -3,8 +3,10 @@
 module Main where
 
 import Prelude hiding (id)
-import Control.Category (id)
+
 import Control.Arrow ((>>>), (***), arr)
+import Control.Category (id)
+import Control.Monad (forM_)
 import Data.Monoid (mempty, mconcat)
 
 import Hakyll
@@ -52,7 +54,15 @@ main = hakyll $ do
            route   idRoute
            compile copyFileCompiler
 
-    -- Create introduction and acknowledgements pages
+    -- Create top-level pages
+    forM_ ["intro.md", "acknowledge.md", "dictionary.md"] $ \p ->
+      match p $ do
+        route   $ setExtension ".html"
+        compile $ pageCompiler
+          >>> applyTemplateCompiler "templates/default.html"
+          >>> relativizeUrlsCompiler
+
+{-
     _ <- match "intro.md" $ do
           route   $ setExtension ".html"
           compile $ pageCompiler
@@ -64,6 +74,7 @@ main = hakyll $ do
           compile $ pageCompiler
                >>> applyTemplateCompiler "templates/default.html"
                >>> relativizeUrlsCompiler
+-}
 
     -- Render posts list (because I did not think about this we
     -- have two pages with all the posts; could use a re-direct?)
