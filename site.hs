@@ -115,7 +115,7 @@ get1 (_:a:_) = [a]
 get1 _       = []
 
 -- | Given a post and a list of all posts, return the
---   preceeding and following posts, if they exist.
+--   previous and following posts, if they exist.
 --
 findNeighbours :: Compiler (SPage, [SPage]) (SPage, ([SPage], [SPage]))
 findNeighbours = 
