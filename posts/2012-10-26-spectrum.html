@@ -203,7 +203,7 @@ Hydrogen density (10^20 cm**(-2)):   6.98 (Interpolated)
 ------------------------------------------------------------------------------------------
 RA  J2000.0: q
 Colden[Setup]&gt;: quit</code></pre>
-<p>So the column density is <span class="math"><em>n</em><sub><em>H</em></sub> = 7 × 10<sup>20</sup><em>c</em><em>m</em><sup> − 2</sup></span>. Using this, we can construct a model of a thermal plasma - using the <a href="http://cxc.harvard.edu/sherpa/ahelp/xsapec.html">X-Spec APEC model</a> - which is absorbed by our Galaxy - using the <a href="http://cxc.harvard.edu/sherpa/ahelp/xpshabs.html">X-Spec PHABS model</a>, noting that this model has units of $10^{22} cm^{-2} for the <span class="math"><em>n</em><sub><em>H</em></sub></span> parameter):</p>
+<p>So the column density is <span class="math"><em>n</em><sub><em>H</em></sub> = 7 × 10<sup>20</sup> <em>c</em><em>m</em><sup> − 2</sup></span>. Using this, we can construct a model of a thermal plasma - using the <a href="http://cxc.harvard.edu/sherpa/ahelp/xsapec.html">X-Spec APEC model</a> - which is absorbed by our Galaxy - using the <a href="http://cxc.harvard.edu/sherpa/ahelp/xpshabs.html">X-Spec PHABS model</a>, noting that this model has units of <span class="math">10<sup>22</sup> <em>c</em><em>m</em><sup> − 2</sup></span> for the <span class="math"><em>n</em><sub><em>H</em></sub></span> parameter):</p>
 <pre><code>sherpa-6&gt; set_source(xsphabs.gal * xsapec.grp)
 sherpa-7&gt; gal.nh = 0.07
 sherpa-8&gt; freeze(gal)
