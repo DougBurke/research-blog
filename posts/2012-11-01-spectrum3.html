@@ -26,6 +26,16 @@
 
 </div>
 
+<div class="updated">
+  <h3>
+Updated November 2
+</h3>
+  <p>
+   
+I claimed that the background area was 50 times larger than the source area when it is in fact more like 190; the figure caption below has been updated.
+</p>
+</div>
+
 <p>I am going to repeat <a href="../posts/2012-10-31-spectrum2.html">yesterday’s analysis</a>, but this time fixing the background model before fitting the source region. I have gone back to using the <a href="http://cxc.harvard.edu/sherpa/ahelp/xsapec.html">APEC model</a> for describing a thermal plasma, but this should not make much of a difference, as I’ll hopefully show you below.</p>
 <p>The data used here - that is the <a href="http://cxc.harvard.edu/ciao/dictionary/pha.html">PHA</a> files for the source and background regions together with the relevant response files (<a href="http://cxc.harvard.edu/ciao/dictionary/arf.html">ARF</a> and <a href="http://cxc.harvard.edu/ciao/dictionary/rmf.html">RMF</a>) - is <a href="http://figshare.com/articles/X-ray_spectra_for_galaxy_or_galaxy_group_in_a_Chandra_observation_of_MACS_J0717.5+3745/97108">available on FigShare</a>; I had hoped to stick in a fancy FigShare widget but it’s not obvious to me, after looking at the documentation for a whole 5 minutes, how to do that.</p>
 <pre><code>% sherpa
@@ -139,7 +149,7 @@ WARNING: unable to calculate errors using current statistic: cash
 sherpa-22&gt; set_curve('crv1', ['line.style', 'solid', 'symbol.style', 'none'])
 sherpa-23&gt; print_window('bgnd-powerlaw-apec-abundance.png')</code></pre>
 <div class="figure">
-<img src="../images/bgnd-powerlaw-apec-abundance.png" alt="This is very similar to yesterday’s plot, which had a power law with \gamma = -0.03 and thermal plasma with kT = 0.195 keV for solar abundance. Allowing the abundance to vary has not changed the temperature significantly, even with the abundance falling by a factor of \sim 50."></img><p class="caption">This is very similar to yesterday’s plot, which had a power law with <span class="math"><em>γ</em> =  − 0. 03</span> and thermal plasma with <span class="math"><em>k</em><em>T</em> = 0. 195</span> keV for solar abundance. Allowing the abundance to vary has not changed the temperature significantly, even with the abundance falling by a factor of <span class="math"> ∼ 50</span>.</p>
+<img src="../images/bgnd-powerlaw-apec-abundance.png" alt="This is very similar to yesterday’s plot, which had a power law with \gamma = -0.03 and thermal plasma with kT = 0.195 keV for solar abundance. Allowing the abundance to vary has not changed the temperature significantly, even with the abundance falling by a factor of \sim 50 \sim 190."></img><p class="caption">This is very similar to yesterday’s plot, which had a power law with <span class="math"><em>γ</em> =  − 0. 03</span> and thermal plasma with <span class="math"><em>k</em><em>T</em> = 0. 195</span> keV for solar abundance. Allowing the abundance to vary has not changed the temperature significantly, even with the abundance falling by a factor of <del><span class="math"> ∼ 50</span></del> <span class="math"> ∼ 190</span>.</p>
 </div>
 <p>As can be seen from the transcript above, I had to fit the background several times, changing the starting point of the fit, to get to the minimum value. This is because when I added in the <code>gal</code> component, the fitting engine decided that it needed to increase the temperature (it started at 1 keV) rather than decrease it. At some level I do not care too much about these components and parameters, since it is intended as a phenomenological model of the background (since the background contamination is small it does not have to be a perfect model of the background, just describe it well). It is, however, nice to get something meaningful; well, for the thermal emission it is, but the power law slope isn’t physical, since the cosmic X-ray background measured by Chandra and XMM-Newton has a slope of <span class="math"><em>γ</em> ∼ 1. 4</span> at the depth of this observation - e.g. see the background modelling done for XMM-Newton data by <a href="http://labs.adsabs.harvard.edu/ui/abs/2004ApJ...610.1182S">Snowden, Collier, and Kuntz, 2004, ApJ, 610, 1182</a>, although I did just note a recent pre-print by <a href="http://labs.adsabs.harvard.edu/ui/abs/2012arXiv1210.6377M">Moretti et al.</a> describing a much flatter backgronud spectrum (<span class="math"><em>γ</em> ∼ 0. 1</span>) for a slightly-different energy range using Swift and Chandra data - and I have not included any component to account for the particle background.</p>
 <p>I have decided to try fixing this background component before fitting the source since</p>
