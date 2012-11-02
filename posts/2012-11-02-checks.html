@@ -278,7 +278,7 @@ sherpa-6&gt; quit()</code></pre>
 <div class="figure">
 <img src="../images/fit-source-bgnd-0.3-8.0.png" alt="The background can be seen to increase below 0.5 keV and above 7.0 keV, although in reality the change is not huge."></img><p class="caption">The background can be seen to increase below 0.5 keV and above 7.0 keV, although in reality the change is not huge.</p>
 </div>
-<p>The background model has struggled to account for the new data; not shown in the output elided above is the fact that the temperature of the <code>gal</code> component is stuck at it’s minimum temperature (<span class="math"> ∼ 0. 1</span> keV) and abundance (0). Overall the source parameters or their errors are not significantly different.</p>
+<p>The background model has struggled to account for the new data (the background increase at higher energies should probably be modelled by a separate power law or, in this particular case, a gaussian line, but this extra complexity is not worth it for this analysis); not shown in the output elided above is the fact that the temperature of the <code>gal</code> component is stuck at it’s minimum temperature (<span class="math"> ∼ 0. 1</span> keV) and abundance (0). Overall the source parameters or their errors are not significantly different.</p>
 <h3 id="to-5.0-kev">0.6 to 5.0 keV</h3>
 <pre><code>% sherpa fit_group.py
 -----------------------------------------------------
@@ -310,6 +310,75 @@ sherpa-5&gt; quit()</code></pre>
 <p>The <code>gal</code> component of the background has an unphysical abundance of <span class="math"> ∼ 10</span> times solar in this fit, but the results overall remain the same. Note that the reduction in the high-energy limit could correspond to the slight increase in best-fit temperature, since there is less of a constraint, but I am probably reading too much into the small changes.</p>
 <h2 id="the-takeaway-message">The takeaway message?</h2>
 <p>It looks like the exact choice of energy range used in the analysis does not significantly influence the results. Now, that’s not to say that this is done and dusted, since I havent’ proved that the emission is actually from a thermal plasma, since I haven’t tried fitting anything else to it!</p>
+<h2 id="a-powerlaw">A powerlaw?</h2>
+<p>So, does a power law fit as well? I use the same script as above to fit the 0.5 to 7.0 keV data, then change the source model to be an absorbed power law:</p>
+<pre><code>% sherpa fit_group.py
+-----------------------------------------------------
+Welcome to Sherpa: CXC's Modeling and Fitting Package
+-----------------------------------------------------
+CIAO 4.4 Sherpa version 2 Tuesday, June 5, 2012
+
+sherpa-2&gt; dofit()
+***
+*** Fix bgnd before source fitting: True
+*** Energy range: 0.5 to 7.0 keV
+***
+confidence 1-sigma (68.2689%) bounds:
+   Param            Best-Fit  Lower Bound  Upper Bound
+   -----            --------  -----------  -----------
+   grp.kT            1.32725    -0.225755     0.402842
+   grp.Abundanc     0.113492   -0.0887834     0.181328
+   grp.norm      5.21016e-05 -1.37811e-05  1.67819e-05
+sherpa-3&gt; set_source(galabs * powlaw1d.plsrc)
+sherpa-4&gt; fit()
+Dataset               = 1
+Method                = neldermead
+Statistic             = cash
+Initial fit statistic = 2.40818e+07
+Final fit statistic   = 751.125 at function evaluation 308
+Data points           = 892
+Degrees of freedom    = 890
+Change in statistic   = 2.4081e+07
+   plsrc.gamma    2.63605     
+   plsrc.ampl     1.11799e-05 
+sherpa-5&gt; fit()
+Dataset               = 1
+Method                = neldermead
+Statistic             = cash
+Initial fit statistic = 751.125
+Final fit statistic   = 751.125 at function evaluation 286
+Data points           = 892
+Degrees of freedom    = 890
+Change in statistic   = 0
+   plsrc.gamma    2.63605     
+   plsrc.ampl     1.11799e-05 
+sherpa-6&gt; conf()
+plsrc.gamma lower bound:	-0.274655
+plsrc.gamma upper bound:	0.289174
+plsrc.ampl lower bound:	-1.545e-06
+plsrc.ampl upper bound:	1.69696e-06
+Dataset               = 1
+Confidence Method     = confidence
+Iterative Fit Method  = None
+Fitting Method        = neldermead
+Statistic             = cash
+confidence 1-sigma (68.2689%) bounds:
+   Param            Best-Fit  Lower Bound  Upper Bound
+   -----            --------  -----------  -----------
+   plsrc.gamma       2.63605    -0.274655     0.289174
+   plsrc.ampl    1.11799e-05   -1.545e-06  1.69696e-06
+sherpa-7&gt; plot_fit()
+WARNING: unable to calculate errors using current statistic: cash
+sherpa-8&gt; set_curve('crv1', ['line.style', 'solid', 'symbol.style', 'none'])
+sherpa-9&gt; set_source(galabs * grp)
+sherpa-10&gt; plot_model(overplot=True)
+sherpa-11&gt; set_histogram(['line.color', 'blue'])
+sherpa-12&gt; print_window('fit-apec-powerlaw-comparison.png')</code></pre>
+<div class="figure">
+<img src="../images/fit-apec-powerlaw-comparison.png" alt="The power-law model is shown in red and the thermal plasma model in blue. The peak in the emission at 1 keV looks to be better fit by the thermal model but it really isn’t clear that we can discriminate between these two models from the spectrum alone."></img><p class="caption">The power-law model is shown in red and the thermal plasma model in blue. The peak in the emission at 1 keV looks to be better fit by the thermal model but it really isn’t clear that we can discriminate between these two models from the spectrum alone.</p>
+</div>
+<p>So, the emission can be adequately explained either as from a hot plasma or from some power-law (non thermal) process. Given that the X-ray emission is from an extended region, rather than a point source, the plasma model is preferred, <em>but</em> one complication is that there could be both processes present - an extended plasma and a power-law component in the central galaxy, since the galaxy does show (faint) radio emission.</p>
+<p>As is commonly seen on telescope proposals, more data is needed!</p>
 
 
 
