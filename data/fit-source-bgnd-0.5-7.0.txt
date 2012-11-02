@@ -1,0 +1,166 @@
+% sherpa fit_group.py
+-----------------------------------------------------
+Welcome to Sherpa: CXC's Modeling and Fitting Package
+-----------------------------------------------------
+CIAO 4.4 Sherpa version 2 Tuesday, June 5, 2012
+
+sherpa-2> help(dofit)
+
+sherpa-3> dofit()
+***
+*** Fix bgnd before source fitting: True
+*** Energy range: 0.5 to 7.0 keV
+***
+read ARF file group.warf
+read RMF file group.wrmf
+read ARF (background) file group_bkg.warf
+read RMF (background) file group_bkg.wrmf
+read background file group_bkg.pi
+*** Fitting background
+Dataset               = 1
+Method                = neldermead
+Statistic             = cash
+Initial fit statistic = 2.61968e+07
+Final fit statistic   = 703.056 at function evaluation 343
+Data points           = 446
+Degrees of freedom    = 444
+Change in statistic   = 2.61961e+07
+   bgnd.gamma     0.551107    
+   bgnd.ampl      4.72044e-05 
+Dataset               = 1
+Method                = neldermead
+Statistic             = cash
+Initial fit statistic = 703.056
+Final fit statistic   = 703.056 at function evaluation 290
+Data points           = 446
+Degrees of freedom    = 444
+Change in statistic   = 0
+   bgnd.gamma     0.551107    
+   bgnd.ampl      4.72044e-05 
+Dataset               = 1
+Method                = neldermead
+Statistic             = cash
+Initial fit statistic = 2.78615e+06
+Final fit statistic   = 500.503 at function evaluation 1250
+Data points           = 446
+Degrees of freedom    = 442
+Change in statistic   = 2.78565e+06
+   bgnd.gamma     -0.0255636  
+   bgnd.ampl      2.25478e-05 
+   gal.kT         0.1954      
+   gal.norm       0.000100323 
+Dataset               = 1
+Method                = neldermead
+Statistic             = cash
+Initial fit statistic = 500.503
+Final fit statistic   = 500.503 at function evaluation 629
+Data points           = 446
+Degrees of freedom    = 442
+Change in statistic   = 0
+   bgnd.gamma     -0.0255636  
+   bgnd.ampl      2.25478e-05 
+   gal.kT         0.1954      
+   gal.norm       0.000100323 
+Dataset               = 1
+Method                = neldermead
+Statistic             = cash
+Initial fit statistic = 500.503
+Final fit statistic   = 496.268 at function evaluation 1568
+Data points           = 446
+Degrees of freedom    = 441
+Change in statistic   = 4.2347
+   bgnd.gamma     -0.0738507  
+   bgnd.ampl      2.10531e-05 
+   gal.kT         0.196389    
+   gal.Abundanc   0.022431    
+   gal.norm       0.00218217  
+Dataset               = 1
+Method                = neldermead
+Statistic             = cash
+Initial fit statistic = 496.268
+Final fit statistic   = 496.268 at function evaluation 707
+Data points           = 446
+Degrees of freedom    = 441
+Change in statistic   = 1.45236e-07
+   bgnd.gamma     -0.0738574  
+   bgnd.ampl      2.1053e-05  
+   gal.kT         0.196388    
+   gal.Abundanc   0.0224329   
+   gal.norm       0.00218218  
+*** Freezing background
+*** Fitting source
+Dataset               = 1
+Method                = neldermead
+Statistic             = cash
+Initial fit statistic = 8.13846e+06
+Final fit statistic   = 755.432 at function evaluation 306
+Data points           = 892
+Degrees of freedom    = 890
+Change in statistic   = 8.13771e+06
+   grp.kT         2.03504     
+   grp.norm       2.58263e-05 
+Dataset               = 1
+Method                = neldermead
+Statistic             = cash
+Initial fit statistic = 755.432
+Final fit statistic   = 755.432 at function evaluation 279
+Data points           = 892
+Degrees of freedom    = 890
+Change in statistic   = 0
+   grp.kT         2.03504     
+   grp.norm       2.58263e-05 
+grp.norm lower bound:	-5.95703e-06
+grp.norm upper bound:	4.06683e-06
+grp.kT lower bound:	-0.529801
+grp.kT upper bound:	0.520638
+Dataset               = 1
+Confidence Method     = confidence
+Iterative Fit Method  = None
+Fitting Method        = neldermead
+Statistic             = cash
+confidence 1-sigma (68.2689%) bounds:
+   Param            Best-Fit  Lower Bound  Upper Bound
+   -----            --------  -----------  -----------
+   grp.kT            2.03504    -0.529801     0.520638
+   grp.norm      2.58263e-05 -5.95703e-06  4.06683e-06
+*** now allowing metallicity to vary
+Dataset               = 1
+Method                = neldermead
+Statistic             = cash
+Initial fit statistic = 755.432
+Final fit statistic   = 750.072 at function evaluation 494
+Data points           = 892
+Degrees of freedom    = 889
+Change in statistic   = 5.3606
+   grp.kT         1.32712     
+   grp.Abundanc   0.113515    
+   grp.norm       5.20994e-05 
+Dataset               = 1
+Method                = neldermead
+Statistic             = cash
+Initial fit statistic = 750.072
+Final fit statistic   = 750.072 at function evaluation 423
+Data points           = 892
+Degrees of freedom    = 889
+Change in statistic   = 1.7603e-07
+   grp.kT         1.32725     
+   grp.Abundanc   0.113492    
+   grp.norm       5.21016e-05 
+grp.kT lower bound:	-0.225755
+grp.norm lower bound:	-1.37811e-05
+grp.kT upper bound:	0.402842
+grp.Abundanc lower bound:	-0.0887834
+grp.Abundanc upper bound:	0.181328
+grp.norm upper bound:	1.67819e-05
+Dataset               = 1
+Confidence Method     = confidence
+Iterative Fit Method  = None
+Fitting Method        = neldermead
+Statistic             = cash
+confidence 1-sigma (68.2689%) bounds:
+   Param            Best-Fit  Lower Bound  Upper Bound
+   -----            --------  -----------  -----------
+   grp.kT            1.32725    -0.225755     0.402842
+   grp.Abundanc     0.113492   -0.0887834     0.181328
+   grp.norm      5.21016e-05 -1.37811e-05  1.67819e-05
+sherpa-4> 
