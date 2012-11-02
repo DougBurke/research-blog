@@ -4,8 +4,6 @@ author: Douglas Burke
 date: October 23 2012
 ---
 
-## Acknowledgements
-
 This research uses data produced by the
 [Chandra X-ray Center](http://cxc.harvard.edu),
 which is operated for NASA by the 
@@ -24,7 +22,7 @@ project run by the
 [Space Telescope Science Institute](http://www.stsci.edu/).
 
 Data storage and tracking is provided by
-[FigShare](http://figsahre.com).
+[FigShare](http://figshare.com).
 
 The site is hosted by (and stored on) [github](https://github.com/)
 and is created using [hakyll](http://jaspervdj.be/hakyll/).
