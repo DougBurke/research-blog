@@ -23,5 +23,8 @@ This research uses data provided by the
 project run by the 
 [Space Telescope Science Institute](http://www.stsci.edu/).
 
+Data storage and tracking is provided by
+[FigShare](http://figsahre.com).
+
 The site is hosted by (and stored on) [github](https://github.com/)
 and is created using [hakyll](http://jaspervdj.be/hakyll/).
